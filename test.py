@@ -14,21 +14,23 @@ from src.db_func import pets
 
 
 
-data = [
-    {"_id": 1,"name":"roger","animal":"dog","breed":"Husky"},
-    {"_id": 2,"name":"gem","animal":"cat","breed":"Tabby"},
-    {"_id":3,"name":"tar","animal":"Spider","breed":"Tartula"},
-    {"_id":4,"name":"kuttapi","animal":"Fish","breed":"Arownana"},
-    {"_id":5,"name":"lucy","animal":"cat","breed":"Siamese"},
-    {"_id":6,"name":"sam","animal":"cat","breed":"Siamese"},
-    {"_id":7,"name":"tuffy","animal":"dog","breed":"Pomerarian"},
-    {"_id":8,"name":"snoopy","animal":"dog","breed":"Dashchund"},
-    {"_id":9,"name":"sucky","animal":"Fish","breed":"Sucker Fish"},
-]
-pets.insert_many(data)
+# data = [
+#     {"_id": 1,"name":"roger","animal":"dog","breed":"Husky"},
+#     {"_id": 2,"name":"gem","animal":"cat","breed":"Tabby"},
+#     {"_id":3,"name":"tar","animal":"Spider","breed":"Tartula"},
+#     {"_id":4,"name":"kuttapi","animal":"Fish","breed":"Arownana"},
+#     {"_id":5,"name":"lucy","animal":"cat","breed":"Siamese"},
+#     {"_id":6,"name":"sam","animal":"cat","breed":"Siamese"},
+#     {"_id":7,"name":"tuffy","animal":"dog","breed":"Pomerarian"},
+#     {"_id":8,"name":"snoopy","animal":"dog","breed":"Dashchund"},
+#     {"_id":9,"name":"sucky","animal":"Fish","breed":"Sucker Fish"},
+# ]
+
+# pets.insert_many(data)
+
+
 for x in pets.find({}):
     print(x)
-
 
 app = FastAPI(title="TEST API")
 
@@ -86,7 +88,6 @@ def by_animal_Name(animal:Optional[str]):
             return res
         else: return {'Error':"Data Doesnt Exist"}
 
-print(Pet)
 @app.get('/animals')
 def by_animalBreed(breed:str):
     res = []
@@ -97,12 +98,10 @@ def by_animalBreed(breed:str):
         return res
     else: return "Not Found" 
 
-
-
 @app.post('/send')
 def send(text: str):
     return text
 
-if __name__ == "__main__":
-    uvicorn.run(app,port=5001)
+# if __name__ == "__main__":
+#     uvicorn.run(app,port=5001)
 
