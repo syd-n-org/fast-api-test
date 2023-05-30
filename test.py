@@ -1,4 +1,4 @@
-from fastapi import  FastAPI, Path, APIRouter
+from fastapi import  FastAPI, Path
 from typing import Optional,List,Literal,Union
 from fastapi.routing import APIRouter
 from pydantic import BaseModel,Field
@@ -8,7 +8,7 @@ from pymongo import MongoClient
 import requests
 import asyncio
 import uvicorn
-from src.db_func.db import pets
+from src.db_func import pets
  # helloooooo
 
 
@@ -29,127 +29,79 @@ from src.db_func.db import pets
 # pets.insert_many(data)
 
 
-# for x in pets.find({}):
-#     print(x)
+for x in pets.find({}):
+    print(x)
 
 app = FastAPI(title="TEST API")
 
 class Pet(BaseModel):
-  pet_ID  : int 
-  name    : str 
-  animal  : str 
-  breed   : str 
+  pet_ID      : int = pets.count_documents({}) + 1
+  name    : str = "name"
+  animal  : Optional[str] = "animal"
+  breed   : str = "breed"
 
+ 
+@app.get('/')
+def index():
+    return "WELCOME TO PET DB"
 
-class HomepageMsgs(BaseModel):
-    create : str = "/create/"
-    byID : str = ""
-
-# @app.get('/')
-# def index():
-#     return "WELCOME TO PET DB"
-
-# @app.post("/create/")
-# def create_pet(pet:Pet):
-#     # if pets.find_one({"pet_ID":ID}) != None:
-#     # # if _id in pets.find():
-#     #      return {"Error" :"Data Alreasdy Exists"}
-#     # else:
-#         try:
-#             pet_data = {"pet_ID":pet.pet_ID,"name":pet.name,"animal":pet.animal,"breed":pet.breed}
-#             pets.insert_one(pet_data)
-#             return "Done" #insert.inserted_id#pets.find_one({"pet_ID":pet.pet_ID}) 
-#         except:
-#             return {"Error":"Error Inserting Data"}
-#     # pets[_id] = pet
-#     # return pets
-
-# ins = { 
-#   "_id" : 10,
-#   "name"  :  "name",
-#   "animal"  :  "animal",
-#   "breed"  :  "breed"
-#   }
-# # print(create_pet(10,ins))
-
-# @app.get('/pet-id/{ID}')  
-# def get_pet_by_ID(ID:int= Path(description="Serial No. / ID of Pet",gt=0)):
-#     try:
-#         return pets.find_one({"_id":ID})
-#     except:
-#         return {"Error":"Data Doesnt Exist"}
-
-
-# @app.get('/animals')
-# def by_animal_Name(animal:Optional[str]):
-#     if animal == None:
-#         res = list(pets.find({}))
-#         return res
-#     else:
-#         animal = animal.lower()
-#         res = list(pets.find({"animal":animal}))
-#         if len(res) > 0:
-#             return res
-#         else: return {'Error':"Data Doesnt Exist"}
-
-# @app.get('/animals')
-# def by_animalBreed(breed:str):
-#     res = []
-#     for _id in pets:
-#         if pets[_id]["breed"] == breed:
-#             res.append(pets[_id])
-#     if len(res) != 0:
-#         return res
-#     else: return "Not Found" 
-
-# @app.post('/send')
-# def send(text: str):
-#     return text
-
-class PetDB():
-    def __init__(self):
-        self.router = APIRouter()
-        self.router.add_api_route(path='/home',endpoint=self.index,
-                                  methods=["GET"],summary="Landing Page")
-        self.router.add_api_route(path='/animals/{animals}',endpoint=self.show_animals,methods=["GET"],
-                                  summary="Show all records")
-        self.router.add_api_route(path='/create/',endpoint=self.create_pet,
-                                  methods=["POST"],response_model=Pet,summary="Create Pet in DB")
-        self.router.add_api_route(path='find-byID',endpoint=self.get_pet_by_ID,
-                                  methods=["GET"],summary="Find pet by ID")
-
-        
-    async def index(self):
-        welcome_text = f"WELCOME TO PET DB: \nFind Pet by ID @ http://127.0.0.1:5008/create/"
-        return welcome_text
-    
-    async def create_pet(self,pet:Pet):
-        pet_data = pet.dict() #{"pet_ID":pet.pet_ID,"name":pet.name,"animal":pet.animal,"breed":pet.breed}
+@app.post("/create/")
+def create_pet(pet:Pet):
+    # if pets.find_one({"pet_ID":ID}) != None:
+    # # if _id in pets.find():
+    #      return {"Error" :"Data Alreasdy Exists"}
+    # else:
         try:
+            pet_data = {"pet_ID":pet.pet_ID,"name":pet.name,"animal":pet.animal,"breed":pet.breed}
             pets.insert_one(pet_data)
             return "Done" #insert.inserted_id#pets.find_one({"pet_ID":pet.pet_ID}) 
         except:
             return {"Error":"Error Inserting Data"}
-        
-    async def get_pet_by_ID(self,ID:int,gt=0):
-        try:
-            return pets.find_one({"_id":ID})
-        except:
-            return {"Error":"Data Doesnt Exist"}
-        
-    async def show_animals(self,animal:Optional[str]= None):
-        if animal == None:
-            res = list(pets.find({}))
+    # pets[_id] = pet
+    # return pets
+
+ins = { 
+  "_id" : 10,
+  "name"  :  "name",
+  "animal"  :  "animal",
+  "breed"  :  "breed"
+  }
+# print(create_pet(10,ins))
+
+@app.get('/pet-id/{ID}')  
+def get_pet_by_ID(ID:int= Path(description="Serial No. / ID of Pet",gt=0)):
+    try:
+        return pets.find_one({"_id":ID})
+    except:
+        return {"Error":"Data Doesnt Exist"}
+
+
+@app.get('/animals')
+def by_animal_Name(animal:Optional[str]):
+    if animal == None:
+        res = list(pets.find({}))
+        return res
+    else:
+        animal = animal.lower()
+        res = list(pets.find({"animal":animal}))
+        if len(res) > 0:
             return res
-        else:
-            animal = animal.lower()
-            res = list(pets.find({"animal":animal}))
-            if len(res) > 0:
-                return res
-            else: return {'Error':"Data Doesnt Exist"}
-                          
-petdb = PetDB()
-app.include_router(petdb.router,tags=["all"])
+        else: return {'Error':"Data Doesnt Exist"}
+
+@app.get('/animals')
+def by_animalBreed(breed:str):
+    res = []
+    for _id in pets:
+        if pets[_id]["breed"] == breed:
+            res.append(pets[_id])
+    if len(res) != 0:
+        return res
+    else: return "Not Found" 
+
+@app.post('/send')
+def send(text: str):
+    return text
+
 # if __name__ == "__main__":
 #     uvicorn.run(app,port=5001)
 
