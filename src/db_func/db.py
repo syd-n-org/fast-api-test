@@ -14,5 +14,3 @@ def find_one(query,col):
 
 def find_all(query, col):
     return list(fn_db.get_collection(col).find(query, sort=[("_id", pymongo.DESCENDING)]))
-
-print(distinct("orgin",{},"dropdowns"))
