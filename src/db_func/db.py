@@ -8,7 +8,7 @@ pets = test_db.pets
 
 def distinct(key="", query={}, col=""):
         return fn_db[col].distinct(key,query)
-
+# asdfgh
 def find_one(query,col):
     return fn_db.get_collection(col).find_one(query,sort=[("_id",pymongo.DESCENDING)])
 
