@@ -17,6 +17,7 @@ class dbFunctions:
         elif isinstance(insert,list):
             return coll.insert_many(insert).acknowledged
 
+
     @staticmethod
     def erase_one(coll: Any, key: str, val: str):
         erased = coll.delete_one({key: val})
