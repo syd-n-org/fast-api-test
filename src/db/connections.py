@@ -8,5 +8,5 @@ connection = Connection.connect(
     username=settings.db_username,
     password=settings.db_pass,
     auth=settings.db_auth,
-)
 all_ = connection[settings.ALL]
+

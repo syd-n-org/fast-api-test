@@ -11,11 +11,13 @@ class dbFunctions:
         return coll.find_one(query, proj)
 
     @staticmethod
+
     def write(coll: Any, insert:List|Dict = None):
         if isinstance(insert,dict):
             return coll.insert_one(insert).acknowledged
         elif isinstance(insert,list):
             return coll.insert_many(insert).acknowledged
+
 
     @staticmethod
     def erase_one(coll: Any, key: str, val: str):
