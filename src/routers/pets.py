@@ -44,7 +44,7 @@ class AllPets:
         if not dbFunctions.read_one(all_, {"pet_id": data["pet_id"]}):
             # ins = dbFunctions.write_one(all_,data)
             return ResponseModel(
-                content=str(dbFunctions.write_one(all_, data)["_id"]),
+                content=str(dbFunctions.write(all_, data)),
                 message="Data Inserted",
             )
         else:
